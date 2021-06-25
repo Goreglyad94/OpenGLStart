@@ -2,21 +2,51 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+
+int g_windowSizeX = 640;
+int g_windowSizeY = 480;
+
+void glfwWindowSizeCallback(GLFWwindow* window, int width, int height) 
+{
+    g_windowSizeX = width;
+    g_windowSizeY = height;
+    glViewport(0, 0, g_windowSizeX, g_windowSizeY);
+}
+
+void glfwKayCallback(GLFWwindow* window, int key, int scanecode, int action, int mode) 
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+
+    }
+}
+
+
 int main(void)
 {
-    GLFWwindow* window;
-
     /* Initialize the library */
     if (!glfwInit())
         return -1;
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(g_windowSizeX, g_windowSizeY, "OpenGlStart", NULL, NULL);
     if (!window)
     {
+        std::cout << "Window failed" << std::endl;
+
         glfwTerminate();
         return -1;
     }
+
+    glfwSetWindowSizeCallback(window, glfwWindowSizeCallback);
+    glfwSetKeyCallback(window, glfwKayCallback);
+
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
